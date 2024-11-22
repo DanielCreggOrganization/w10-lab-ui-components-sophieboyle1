@@ -13,6 +13,7 @@ In this lab, you'll learn about 7 essential Ionic UI components by building elem
 6. [Ion-Accordion: Collapsible Content](#6-ion-accordion)
 7. [Ion-Infinite-Scroll: Dynamic Loading](#7-ion-infinite-scroll)
 8. [Ion-Refresher: Content Updates](#8-ion-refresher)
+9. [Testing Your Components](#9-testing-your-components)
 
 ## 1. Project Setup
 
