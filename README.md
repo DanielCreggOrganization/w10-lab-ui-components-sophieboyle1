@@ -18,7 +18,7 @@ In this lab, you'll learn about 7 essential Ionic UI components by building elem
 
 Create new project with tabs:
 ```bash
-ionic start ui-components-demo tabs --type=angular --standalone
+ionic start ui-components-demo tabs --type=angular
 cd ui-components-demo
 ```
 
