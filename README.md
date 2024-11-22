@@ -705,15 +705,6 @@ Combine all the components you've learned about to create a "Featured Albums" se
    - [Ionic Forum](https://forum.ionicframework.com/)
    - [Stack Overflow - Ionic](https://stackoverflow.com/questions/tagged/ionic-framework)
 
-## Submission Requirements
-
-Your final submission should include:
-1. Working implementation of all component exercises
-2. Completed bonus challenges (at least 3)
-3. Final challenge implementation
-4. Documentation of any issues encountered and solutions
-5. Brief explanation of component customizations
-
 ---
 End of Lab
 ```typescript
