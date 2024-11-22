@@ -707,5 +707,3 @@ Combine all the components you've learned about to create a "Featured Albums" se
 
 ---
 End of Lab
-```typescript
-// Hint: Add success
