@@ -140,24 +140,6 @@ ion-tab-button {
 }
 ```
 
-3. Implement tab switching animations
-
-Update `tabs.page.ts`:
-```typescript
-import { trigger, transition, style, animate } from '@angular/animations';
-
-@Component({
-  animations: [
-    trigger('tabSwitch', [
-      transition(':enter', [
-        style({ transform: 'translateY(20px)', opacity: 0 }),
-        animate('200ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
-      ])
-    ])
-  ]
-})
-```
-
 ## Ion-Card: Rich Content Display
 
 ### Introduction
