@@ -188,9 +188,11 @@ Create file: `src/app/components/album-card/album-card.component.html`:
 <ion-card [class.featured]="featured">
   <img [alt]="album.title" [src]="album.coverUrl"/>
   
-  <ion-badge *ngIf="album.playCount" class="absolute top-2 right-2">
-    {{ album.playCount }} plays
-  </ion-badge>
+  @if (album.playCount) {
+    <ion-badge class="absolute top-2 right-2">
+      {{ album.playCount }} plays
+    </ion-badge>
+  }
   
   <ion-card-header>
     <ion-card-title>{{ album.title }}</ion-card-title>
@@ -205,11 +207,12 @@ Create file: `src/app/components/album-card/album-card.component.html`:
       </ion-button>
     </div>
     
-    <ion-progress-bar 
-      *ngIf="album.progress"
-      [value]="album.progress" 
-      color="primary">
-    </ion-progress-bar>
+    @if (album.progress) {
+      <ion-progress-bar 
+        [value]="album.progress" 
+        color="primary">
+      </ion-progress-bar>
+    }
     
     <div class="actions mt-4">
       <ion-button fill="clear" size="small">
