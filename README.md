@@ -51,11 +51,6 @@ export class TabsPage {
   constructor() {
     addIcons({ triangle, ellipse, square });
   }
-
-  showTabOptions(event: any) {
-    console.log('Long press detected', event);
-    // Implement your long-press logic here
-  }
 }
 ```
 
@@ -145,16 +140,7 @@ ion-tab-button {
 }
 ```
 
-3. Add a long-press action to each tab
-
-Update `tabs.page.html`:
-```html
-<ion-tab-button 
-  tab="discover" 
-  (press)="showTabOptions($event)">
-```
-
-4. Implement tab switching animations
+3. Implement tab switching animations
 
 Update `tabs.page.ts`:
 ```typescript
