@@ -382,6 +382,7 @@ ion-note {
   color: var(--ion-color-medium);
 }
 ```
+Display this card in Tab2
 
 ## Ion-Modal: Detailed Views
 
@@ -551,6 +552,7 @@ Create file: `src/app/components/song-details-modal/song-details-modal.component
   }
 }
 ```
+Display this card in Tab2
 
 ## Ion-Accordion: Collapsible Content
 
