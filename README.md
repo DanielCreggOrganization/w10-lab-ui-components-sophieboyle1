@@ -30,7 +30,7 @@ Ion-Tabs provide a consistent way to organize and navigate between different sec
 
 ### Demo Implementation
 
-Create file: `src/app/tabs/tabs.page.ts`
+Go to: `src/app/tabs/tabs.page.ts`
 ```typescript
 import { Component } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
@@ -53,7 +53,7 @@ export class TabsPage {
 }
 ```
 
-Create file: `src/app/tabs/tabs.page.html`
+Go to: `src/app/tabs/tabs.page.html`
 ```html
 <ion-tabs>
   <ion-tab-bar slot="bottom">
@@ -75,7 +75,7 @@ Create file: `src/app/tabs/tabs.page.html`
 </ion-tabs>
 ```
 
-Create file: `src/app/tabs/tabs.page.scss`
+Go to: `src/app/tabs/tabs.page.scss`
 ```scss
 :host {
   --ion-tab-bar-color-selected: #ff4081;
