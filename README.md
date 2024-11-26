@@ -26,8 +26,8 @@ Ion-Tabs provide a consistent way to organize and navigate between different sec
 ### Implementation
 Update `src/app/tabs/tabs.page.ts`:
 ```typescript
-import { Component, EnvironmentInjector, inject } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { Component } from '@angular/core';
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonBadge } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, person, notifications } from 'ionicons/icons';
 
@@ -35,10 +35,10 @@ import { home, person, notifications } from 'ionicons/icons';
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonBadge], // Added IonBadge to imports
 })
 export class TabsPage {
-  notificationCount = 3;
+  notificationCount = 3; // This will be displayed in the badge
   
   constructor() {
     addIcons({ home, person, notifications });
@@ -63,7 +63,7 @@ Update `src/app/tabs/tabs.page.html`:
     <ion-tab-button tab="tab3" href="/tabs/tab3">
       <ion-icon name="notifications"></ion-icon>
       <ion-label>Notifications</ion-label>
-      <ion-badge>{{notificationCount}}</ion-badge>
+      <ion-badge color="danger">{{notificationCount}}</ion-badge> <!-- Added color="danger" to make it red -->
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
@@ -84,7 +84,24 @@ ion-tab-button {
 
 ### DIY Task
 1. Add a fourth tab for "Settings" with an appropriate icon
+
 2. Add a custom animation when tabs are selected
+   <details>
+   <summary>💡 Hint</summary>
+   
+   Use CSS transform and transition properties in the .tab-selected class. Try something like:
+   ```scss
+   ion-tab-button {
+     &.tab-selected {
+       ion-icon {
+         transition: all 0.3s ease;
+         transform: rotate(360deg) scale(1.1);
+       }
+     }
+   }
+   ```
+   </details>
+
 3. Change the color scheme to use different colors for selected and unselected states
 
 ## 2. Ion-Card: Basic Content Display
