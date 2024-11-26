@@ -145,6 +145,9 @@ ion-tab-button {
 ### Introduction
 Ion-Card is perfect for displaying rich content with images and actions. We'll create an album card component and then extend it with additional features.
 
+```bash
+ionic g c album-card --standalone
+```
 ### Demo Implementation
 
 Create file: `src/app/components/album-card/album-card.component.ts`:
