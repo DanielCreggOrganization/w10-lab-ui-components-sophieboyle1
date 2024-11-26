@@ -5,17 +5,17 @@
 In this lab, you'll learn about 7 essential Ionic UI components by building elements of a music discovery app. Each section follows a pattern of demonstration followed by hands-on exercises to deepen your understanding.
 
 ## Contents
-1. [Project Setup](#1-project-setup)
-2. [Ion-Tabs: App Navigation](#2-ion-tabs)
-3. [Ion-Card: Rich Content Display](#3-ion-card)
-4. [Ion-List: Interactive Lists](#4-ion-list)
-5. [Ion-Modal: Detailed Views](#5-ion-modal)
-6. [Ion-Accordion: Collapsible Content](#6-ion-accordion)
-7. [Ion-Infinite-Scroll: Dynamic Loading](#7-ion-infinite-scroll)
-8. [Ion-Refresher: Content Updates](#8-ion-refresher)
-9. [Testing Your Components](#9-testing-your-components)
+1. [Project Setup](#project-setup)
+2. [Ion-Tabs: App Navigation](#ion-tabs-app-navigation)
+3. [Ion-Card: Rich Content Display](#ion-card-rich-content-display)
+4. [Ion-List: Interactive Lists](#ion-list-interactive-lists)
+5. [Ion-Modal: Detailed Views](#ion-modal-detailed-views)
+6. [Ion-Accordion: Collapsible Content](#ion-accordion-collapsible-content)
+7. [Ion-Infinite-Scroll: Dynamic Loading](#ion-infinite-scroll-dynamic-loading)
+8. [Ion-Refresher: Content Updates](#ion-refresher-content-updates)
+9. [Testing Your Components](#testing-your-components)
 
-## 1. Project Setup
+## Project Setup
 
 Create new project with tabs:
 ```bash
@@ -23,43 +23,71 @@ ionic start ui-components-demo tabs --type=angular
 cd ui-components-demo
 ```
 
-## 2. Ion-Tabs: App Navigation
+## Ion-Tabs: App Navigation
 
 ### Introduction
 Ion-Tabs provide a consistent way to organize and navigate between different sections of your app. We'll create a basic tab structure and then enhance it with additional features.
 
 ### Demo Implementation
+
+Create file: `src/app/tabs/tabs.page.ts`
 ```typescript
-// src/app/tabs/tabs.page.ts
 import { Component } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { Disc, Library, Heart } from 'lucide-react';
 
 @Component({
-  template: `
-    <ion-tabs>
-      <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="discover">
-          <ion-icon><Disc /></ion-icon>
-          <ion-label>Discover</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="library">
-          <ion-icon><Library /></ion-icon>
-          <ion-label>Library</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="favorites">
-          <ion-icon><Heart /></ion-icon>
-          <ion-label>Favorites</ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
-  `,
+  selector: 'app-tabs',
+  templateUrl: './tabs.page.html',
+  styleUrls: ['./tabs.page.scss'],
   standalone: true,
   imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel]
 })
-export class TabsPage {}
+export class TabsPage {
+  favoriteCount = 5;
+  
+  showTabOptions(event: any) {
+    console.log('Long press detected', event);
+    // Implement your long-press logic here
+  }
+}
+```
+
+Create file: `src/app/tabs/tabs.page.html`
+```html
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="discover">
+      <ion-icon><Disc /></ion-icon>
+      <ion-label>Discover</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="library">
+      <ion-icon><Library /></ion-icon>
+      <ion-label>Library</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="favorites">
+      <ion-icon><Heart /></ion-icon>
+      <ion-label>Favorites</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
+```
+
+Create file: `src/app/tabs/tabs.page.scss`
+```scss
+:host {
+  --ion-tab-bar-color-selected: #ff4081;
+}
+
+ion-tab-button {
+  transition: all 0.3s ease;
+  
+  &.tab-selected {
+    transform: scale(1.05);
+  }
+}
 ```
 
 ### Key Features
@@ -70,11 +98,10 @@ export class TabsPage {}
 
 ### DIY Exercise: Enhance the Tab Bar
 
-Now that you understand basic tab implementation, enhance it with these features:
-
 1. Add a badge counter to the Favorites tab
-```typescript
-// Hint: Use IonBadge to show count
+
+Update `tabs.page.html`:
+```html
 <ion-tab-button tab="favorites">
   <ion-icon><Heart /></ion-icon>
   <ion-label>Favorites</ion-label>
@@ -83,531 +110,811 @@ Now that you understand basic tab implementation, enhance it with these features
 ```
 
 2. Create a custom tab indicator
-```typescript
-// Hint: Use CSS custom properties
+
+Update `tabs.page.scss`:
+```scss
 :host {
   --ion-tab-bar-color-selected: #ff4081;
+}
+
+ion-tab-button {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--ion-tab-bar-color-selected);
+    transition: all 0.3s ease;
+  }
+
+  &.tab-selected::before {
+    width: 50%;
+    left: 25%;
+  }
 }
 ```
 
 3. Add a long-press action to each tab
-```typescript
-// Hint: Use (press) event
+
+Update `tabs.page.html`:
+```html
 <ion-tab-button 
   tab="discover" 
   (press)="showTabOptions($event)">
 ```
 
 4. Implement tab switching animations
+
+Update `tabs.page.ts`:
 ```typescript
-// Hint: Use Angular animations
+import { trigger, transition, style, animate } from '@angular/animations';
+
 @Component({
   animations: [
     trigger('tabSwitch', [
-      transition(':enter', [ ... ])
+      transition(':enter', [
+        style({ transform: 'translateY(20px)', opacity: 0 }),
+        animate('200ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
+      ])
     ])
   ]
 })
 ```
 
-### Bonus Challenge
-Create a custom tab bar that changes appearance based on the current route:
-- Different background colors per tab
-- Custom icons for active state
-- Micro-interactions on tab change
-
-## 3. Ion-Card: Rich Content Display
+## Ion-Card: Rich Content Display
 
 ### Introduction
 Ion-Card is perfect for displaying rich content with images and actions. We'll create an album card component and then extend it with additional features.
 
 ### Demo Implementation
+
+Create file: `src/app/components/album-card/album-card.component.ts`:
 ```typescript
+import { Component, Input } from '@angular/core';
+import { 
+  IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, 
+  IonCardContent, IonButton, IonIcon, IonBadge, IonProgressBar 
+} from '@ionic/angular/standalone';
+
+interface Album {
+  title: string;
+  artist: string;
+  coverUrl: string;
+  year: number;
+  playCount?: number;
+  progress?: number;
+}
+
 @Component({
-  template: `
-    <ion-card>
-      <img [alt]="album.title" [src]="album.coverUrl"/>
-      <ion-card-header>
-        <ion-card-title>{{ album.title }}</ion-card-title>
-        <ion-card-subtitle>{{ album.artist }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <div class="flex justify-between">
-          <span>{{ album.year }}</span>
-          <ion-button fill="clear">
-            <ion-icon slot="icon-only" name="heart"></ion-icon>
-          </ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  `,
+  selector: 'app-album-card',
+  templateUrl: './album-card.component.html',
+  styleUrls: ['./album-card.component.scss'],
+  standalone: true,
   imports: [
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
-    IonCardContent,
-    IonButton,
-    IonIcon
+    IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle,
+    IonCardContent, IonButton, IonIcon, IonBadge, IonProgressBar
   ]
 })
+export class AlbumCardComponent {
+  @Input() album!: Album;
+  @Input() featured = false;
+}
 ```
 
-### Key Features
-- Header with title/subtitle
-- Media content support
-- Action buttons
-- Flexible content area
-- Shadow and elevation
-
-### DIY Exercise: Enhance the Album Card
-
-1. Add a "Play Count" badge
-```typescript
-// Hint: Use IonBadge in the top-right corner
-<ion-badge class="absolute top-2 right-2">
-  {{ playCount }} plays
-</ion-badge>
+Create file: `src/app/components/album-card/album-card.component.html`:
+```html
+<ion-card [class.featured]="featured">
+  <img [alt]="album.title" [src]="album.coverUrl"/>
+  
+  <ion-badge *ngIf="album.playCount" class="absolute top-2 right-2">
+    {{ album.playCount }} plays
+  </ion-badge>
+  
+  <ion-card-header>
+    <ion-card-title>{{ album.title }}</ion-card-title>
+    <ion-card-subtitle>{{ album.artist }}</ion-card-subtitle>
+  </ion-card-header>
+  
+  <ion-card-content>
+    <div class="flex justify-between items-center mb-4">
+      <span>{{ album.year }}</span>
+      <ion-button fill="clear">
+        <ion-icon slot="icon-only" name="heart"></ion-icon>
+      </ion-button>
+    </div>
+    
+    <ion-progress-bar 
+      *ngIf="album.progress"
+      [value]="album.progress" 
+      color="primary">
+    </ion-progress-bar>
+    
+    <div class="actions mt-4">
+      <ion-button fill="clear" size="small">
+        <ion-icon slot="start" name="share-outline"></ion-icon>
+        Share
+      </ion-button>
+      <ion-button fill="clear" size="small">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Add to Playlist
+      </ion-button>
+    </div>
+  </ion-card-content>
+</ion-card>
 ```
 
-2. Add a progress bar
-```typescript
-// Hint: Use IonProgressBar
-<ion-progress-bar 
-  [value]="albumProgress" 
-  color="primary">
-</ion-progress-bar>
+Create file: `src/app/components/album-card/album-card.component.scss`:
+```scss
+ion-card {
+  margin: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &.featured {
+    margin: 24px;
+    
+    img {
+      height: 300px;
+      object-fit: cover;
+    }
+    
+    ion-card-content {
+      padding: 16px;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid var(--ion-color-light);
+  padding-top: 8px;
+}
 ```
 
-3. Create a card footer
-```typescript
-// Hint: Add action buttons
-<ion-buttons slot="end">
-  <ion-button>
-    <ion-icon name="share-outline"></ion-icon>
-  </ion-button>
-</ion-buttons>
-```
-
-### Bonus Challenge
-Create a Featured Album card variant with:
-- Larger image size
-- Album description
-- Rating display
-- Top tracks preview
-
-## 4. Ion-List: Interactive Lists
+## Ion-List: Interactive Lists
 
 ### Introduction
 Ion-List provides a consistent way to display rows of information with interactive features. We'll create a song list with sliding actions.
 
 ### Demo Implementation
+
+Create file: `src/app/components/song-list/song-list.component.ts`:
 ```typescript
+import { Component, Input } from '@angular/core';
+import { 
+  IonList, IonItem, IonLabel, IonNote, IonItemSliding,
+  IonItemOptions, IonItemOption, IonIcon, IonReorderGroup,
+  IonReorder, IonItemDivider
+} from '@ionic/angular/standalone';
+
+interface Song {
+  title: string;
+  artist: string;
+  duration: string;
+  category?: string;
+}
+
 @Component({
-  template: `
-    <ion-list>
-      <ion-item-sliding>
+  selector: 'app-song-list',
+  templateUrl: './song-list.component.html',
+  styleUrls: ['./song-list.component.scss'],
+  standalone: true,
+  imports: [
+    IonList, IonItem, IonLabel, IonNote, IonItemSliding,
+    IonItemOptions, IonItemOption, IonIcon, IonReorderGroup,
+    IonReorder, IonItemDivider
+  ]
+})
+export class SongListComponent {
+  @Input() songs: Song[] = [];
+  reorderEnabled = false;
+
+  handleReorder(event: any) {
+    // Prevent default behavior and handle the reorder
+    event.detail.complete(true);
+  }
+
+  playSong(song: Song) {
+    console.log('Playing:', song.title);
+  }
+
+  addToPlaylist(song: Song) {
+    console.log('Adding to playlist:', song.title);
+  }
+}
+```
+
+Create file: `src/app/components/song-list/song-list.component.html`:
+```html
+<ion-list>
+  <ion-reorder-group [disabled]="!reorderEnabled" (ionItemReorder)="handleReorder($event)">
+    <ng-container *ngFor="let category of getSongCategories()">
+      <ion-item-divider sticky>
+        <ion-label>{{ category }}</ion-label>
+      </ion-item-divider>
+
+      <ion-item-sliding *ngFor="let song of getSongsByCategory(category)">
         <ion-item>
           <ion-label>
-            <h2>Song Title</h2>
-            <p>Artist Name</p>
+            <h2>{{ song.title }}</h2>
+            <p>{{ song.artist }}</p>
           </ion-label>
-          <ion-note slot="end">3:45</ion-note>
+          <ion-note slot="end">{{ song.duration }}</ion-note>
+          <ion-reorder slot="end"></ion-reorder>
         </ion-item>
 
+        <ion-item-options side="start">
+          <ion-item-option color="success" (click)="playSong(song)">
+            <ion-icon slot="icon-only" name="play"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+
         <ion-item-options side="end">
-          <ion-item-option color="primary">
+          <ion-item-option color="primary" (click)="addToPlaylist(song)">
             <ion-icon slot="icon-only" name="add"></ion-icon>
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
-    </ion-list>
-  `,
-  imports: [
-    IonList,
-    IonItem,
-    IonLabel,
-    IonNote,
-    IonItemSliding,
-    IonItemOptions,
-    IonItemOption,
-    IonIcon
-  ]
-})
+    </ng-container>
+  </ion-reorder-group>
+</ion-list>
 ```
 
-### Key Features
-- Sliding actions
-- Custom item layouts
-- Interactive feedback
-- Reorder capability
+Create file: `src/app/components/song-list/song-list.component.scss`:
+```scss
+ion-item-divider {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 
-### DIY Exercise: Enhance the Song List
+ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  
+  ion-label {
+    h2 {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    p {
+      color: var(--ion-color-medium);
+    }
+  }
+}
 
-1. Add reorder functionality
-```typescript
-// Hint: Use IonReorderGroup
-<ion-reorder-group 
-  (ionItemReorder)="handleReorder($event)" 
-  disabled="false">
+ion-note {
+  font-size: 0.85em;
+  color: var(--ion-color-medium);
+}
 ```
 
-2. Add multiple sliding actions
-```typescript
-// Hint: Add options to both sides
-<ion-item-options side="start">
-  <ion-item-option color="success">
-    <ion-icon name="play"></ion-icon>
-  </ion-item-option>
-</ion-item-options>
-```
-
-3. Add item dividers with sticky headers
-```typescript
-// Hint: Use IonItemDivider
-<ion-item-divider sticky>
-  <ion-label>Recently Added</ion-label>
-</ion-item-divider>
-```
-
-### Bonus Challenge
-Create a playlist view that combines:
-- Reorderable tracks
-- Multiple action options
-- Progress indicators
-- Playing status
-
-## 5. Ion-Modal: Detailed Views
+## Ion-Modal: Detailed Views
 
 ### Introduction
 Ion-Modal provides a way to display detailed content without leaving the current context. We'll create a song details modal.
 
 ### Demo Implementation
-```typescript
-@Component({
-  template: `
-    <ion-button (click)="isOpen = true">
-      View Details
-    </ion-button>
 
-    <ion-modal 
-      [isOpen]="isOpen"
-      [breakpoints]="[0, 0.25, 0.5, 0.75]"
-      [initialBreakpoint]="0.5"
-    >
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Song Details</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="isOpen = false">Close</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <h2>Song Title</h2>
-          <p>Song details...</p>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
-  `,
+Create file: `src/app/components/song-details-modal/song-details-modal.component.ts`:
+```typescript
+import { Component, Input } from '@angular/core';
+import {
+  IonModal, IonHeader, IonToolbar, IonTitle, IonButtons,
+  IonButton, IonContent, IonIcon
+} from '@ionic/angular/standalone';
+import { trigger, transition, style, animate } from '@angular/animations';
+
+@Component({
+  selector: 'app-song-details-modal',
+  templateUrl: './song-details-modal.component.html',
+  styleUrls: ['./song-details-modal.component.scss'],
+  standalone: true,
   imports: [
-    IonModal,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonButton,
-    IonContent
+    IonModal, IonHeader, IonToolbar, IonTitle, IonButtons,
+    IonButton, IonContent, IonIcon
+  ],
+  animations: [
+    trigger('modalAnimation', [
+      transition(':enter', [
+        style({ transform: 'translateY(100%)' }),
+        animate('300ms ease-out', style({ transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ transform: 'translateY(100%)' }))
+      ])
+    ])
   ]
 })
+export class SongDetailsModalComponent {
+  @Input() isOpen = false;
+  presentingElement: HTMLElement | null = null;
+
+  constructor() {
+    this.presentingElement = document.querySelector('.ion-page');
+  }
+
+  onWillPresent() {
+    console.log('Modal will present');
+  }
+
+  onDidDismiss() {
+    console.log('Modal dismissed');
+    this.isOpen = false;
+  }
+}
 ```
 
-### Key Features
-- Sheet modal with breakpoints
-- Customizable transitions
-- Header/footer areas
-- Backdrop dismissal
-
-### DIY Exercise: Enhance the Modal
-
-1. Add gesture-based dismissal
-```typescript
-// Hint: Use swipe gesture
+Create file: `src/app/components/song-details-modal/song-details-modal.component.html`:
+```html
 <ion-modal 
+  [isOpen]="isOpen"
+  [breakpoints]="[0, 0.25, 0.5, 0.75]"
+  [initialBreakpoint]="0.5"
   [canDismiss]="true"
-  [presentingElement]="presentingElement">
+  [presentingElement]="presentingElement"
+  (ionModalWillPresent)="onWillPresent()"
+  (ionModalDidDismiss)="onDidDismiss()"
+  [@modalAnimation]>
+  
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Song Details</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="isOpen = false">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    
+    <ion-content class="ion-padding">
+      <div class="song-details">
+        <img src="album-cover.jpg" alt="Album Cover" class="album-cover"/>
+        <h2>Song Title</h2>
+        <p class="artist">Artist Name</p>
+        
+        <div class="metadata">
+          <div class="info-item">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>3:45</span>
+          </div>
+          <div class="info-item">
+            <ion-icon name="musical-notes-outline"></ion-icon>
+            <span>Album Name</span>
+          </div>
+          <div class="info-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>2024</span>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <ion-button expand="block" color="primary">
+            <ion-icon slot="start" name="play"></ion-icon>
+            Play Now
+          </ion-button>
+          <ion-button expand="block" fill="outline">
+            <ion-icon slot="start" name="add"></ion-icon>
+            Add to Playlist
+          </ion-button>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
 ```
 
-2. Add custom transitions
-```typescript
-// Hint: Use enterAnimation/leaveAnimation
-[enterAnimation]="customEnterAnimation"
-[leaveAnimation]="customLeaveAnimation"
+Create file: `src/app/components/song-details-modal/song-details-modal.component.scss`:
+```scss
+.song-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+
+  .album-cover {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    font-size: 24px;
+    margin: 8px 0;
+  }
+
+  .artist {
+    color: var(--ion-color-medium);
+    margin-bottom: 16px;
+  }
+
+  .metadata {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin: 24px 0;
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ion-color-medium);
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+}
 ```
 
-3. Add modal lifecycle hooks
-```typescript
-// Hint: Use modal events
-(ionModalWillPresent)="onWillPresent()"
-(ionModalDidDismiss)="onDidDismiss()"
-```
-
-### Bonus Challenge
-Create an album details modal with:
-- Image gallery
-- Track list
-- Artist information
-- Related albums
-
-## 6. Ion-Accordion: Collapsible Content
+## Ion-Accordion: Collapsible Content
 
 ### Introduction
 Ion-Accordion helps organize content into expandable sections. We'll create a genre-based music browser.
 
 ### Demo Implementation
+
+Create file: `src/app/components/genre-browser/genre-browser.component.ts`:
 ```typescript
+import { Component } from '@angular/core';
+import {
+  IonAccordionGroup, IonAccordion, IonItem, IonLabel,
+  IonBadge, IonList, IonIcon
+} from '@ionic/angular/standalone';
+
+interface Genre {
+  name: string;
+  count: number;
+  subgenres?: Genre[];
+  albums: Album[];
+}
+
+interface Album {
+  title: string;
+  artist: string;
+}
+
 @Component({
-  template: `
-    <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header">
-          <ion-label>Rock</ion-label>
-          <ion-badge slot="end">12</ion-badge>
-        </ion-item>
-        
-        <div class="ion-padding" slot="content">
-          <ion-list>
-            <ion-item>Album 1</ion-item>
-            <ion-item>Album 2</ion-item>
-          </ion-list>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
-  `,
+  selector: 'app-genre-browser',
+  templateUrl: './genre-browser.component.html',
+  styleUrls: ['./genre-browser.component.scss'],
+  standalone: true,
   imports: [
-    IonAccordionGroup,
-    IonAccordion,
-    IonItem,
-    IonLabel,
-    IonBadge,
-    IonList
+    IonAccordionGroup, IonAccordion, IonItem, IonLabel,
+    IonBadge, IonList, IonIcon
   ]
 })
+export class GenreBrowserComponent {
+  genres: Genre[] = [
+    {
+      name: 'Rock',
+      count: 12,
+      subgenres: [
+        { name: 'Alternative', count: 5, albums: [] },
+        { name: 'Classic Rock', count: 7, albums: [] }
+      ],
+      albums: []
+    }
+  ];
+
+  isOpen = false;
+}
 ```
 
-### Key Features
-- Expandable sections
-- Custom headers
-- Animation support
-- Multiple/single open modes
-
-### DIY Exercise: Enhance the Accordion
-
-1. Add nested accordions
-```typescript
-// Hint: Create sub-categories
+Create file: `src/app/components/genre-browser/genre-browser.component.html`:
+```html
 <ion-accordion-group>
-  <ion-accordion>
-    <ion-accordion-group slot="content">
-      <ion-accordion>
-        <!-- Sub-category content -->
-      </ion-accordion>
-    </ion-accordion-group>
+  <ion-accordion *ngFor="let genre of genres">
+    <ion-item slot="header" [class.expanded]="isOpen">
+      <ion-label>{{ genre.name }}</ion-label>
+      <ion-badge slot="end">{{ genre.count }}</ion-badge>
+      <ion-icon 
+        slot="end" 
+        [name]="isOpen ? 'chevron-down' : 'chevron-forward'">
+      </ion-icon>
+    </ion-item>
+    
+    <div class="ion-padding" slot="content">
+      <ion-accordion-group *ngIf="genre.subgenres?.length">
+        <ion-accordion *ngFor="let subgenre of genre.subgenres">
+          <ion-item slot="header">
+            <ion-label>{{ subgenre.name }}</ion-label>
+            <ion-badge slot="end">{{ subgenre.count }}</ion-badge>
+          </ion-item>
+          
+          <ion-list slot="content">
+            <ion-item *ngFor="let album of subgenre.albums">
+              <ion-label>
+                <h3>{{ album.title }}</h3>
+                <p>{{ album.artist }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-accordion>
+      </ion-accordion-group>
+      
+      <ion-list *ngIf="genre.albums?.length">
+        <ion-item *ngFor="let album of genre.albums">
+          <ion-label>
+            <h3>{{ album.title }}</h3>
+            <p>{{ album.artist }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
   </ion-accordion>
 </ion-accordion-group>
 ```
 
-2. Add custom toggle icons
-```typescript
-// Hint: Use toggleIcon slot
-<ion-icon 
-  slot="toggleIcon" 
-  [name]="isOpen ? 'chevron-down' : 'chevron-forward'">
-</ion-icon>
-```
+Create file: `src/app/components/genre-browser/genre-browser.component.scss`:
+```scss
+ion-accordion {
+  margin: 8px 0;
+}
 
-3. Add transition animations
-```typescript
-// Hint: Use CSS transitions
-.custom-accordion {
-  transition: all 0.3s ease-in-out;
+ion-item.expanded {
+  --background: var(--ion-color-light);
+}
+
+ion-icon[slot="end"] {
+  transition: transform 0.3s ease;
+}
+
+.expanded ion-icon[slot="end"] {
+  transform: rotate(180deg);
+}
+
+ion-badge {
+  margin-right: 8px;
+}
+
+ion-list ion-item {
+  --padding-start: 32px;
 }
 ```
 
-### Bonus Challenge
-Create a music browser with:
-- Nested genre categories
-- Preview playback
-- Drag-and-drop organization
-- Custom animations
-
-## 7. Ion-Infinite-Scroll: Dynamic Loading
+## Ion-Infinite-Scroll: Dynamic Loading
 
 ### Introduction
 Ion-Infinite-Scroll enables continuous content loading. We'll create an infinite scrolling album list.
 
 ### Demo Implementation
-```typescript
-@Component({
-  template: `
-    <ion-content>
-      <ion-list>
-        @for (item of items; track item) {
-          <ion-item>{{ item }}</ion-item>
-        }
-      </ion-list>
 
-      <ion-infinite-scroll (ionInfinite)="loadMore($event)">
-        <ion-infinite-scroll-content
-          loadingSpinner="bubbles"
-          loadingText="Loading more...">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
-    </ion-content>
-  `,
+Create file: `src/app/components/infinite-album-list/infinite-album-list.component.ts`:
+```typescript
+import { Component, OnInit } from '@angular/core';
+import {
+  IonContent, IonList, IonItem, IonLabel,
+  IonInfiniteScroll, IonInfiniteScrollContent
+} from '@ionic/angular/standalone';
+
+@Component({
+  selector: 'app-infinite-album-list',
+  templateUrl: './infinite-album-list.component.html',
+  styleUrls: ['./infinite-album-list.component.scss'],
+  standalone: true,
   imports: [
-    IonContent,
-    IonList,
-    IonItem,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent
+    IonContent, IonList, IonItem, IonLabel,
+    IonInfiniteScroll, IonInfiniteScrollContent
   ]
 })
-```
+export class InfiniteAlbumListComponent implements OnInit {
+  items: any[] = [];
+  loading = false;
+  error: string | null = null;
 
-### Key Features
-- Automatic threshold detection
-- Custom loading indicators
-- Completion handling
-- Disable on completion
+  ngOnInit() {
+    this.loadInitialData();
+  }
 
-### DIY Exercise: Enhance the Infinite Scroll
+  async loadInitialData() {
+    try {
+      await this.loadData();
+    } catch (error) {
+      this.error = 'Failed to load initial data';
+    }
+  }
 
-1. Add custom threshold
-```typescript
-// Hint: Set threshold distance
-<ion-infinite-scroll threshold="100px">
-```
+  async loadData() {
+    this.loading = true;
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const newItems = Array(10).fill(null).map((_, i) => ({
+        id: this.items.length + i,
+        title: `Album ${this.items.length + i + 1}`
+      }));
+      this.items.push(...newItems);
+    } finally {
+      this.loading = false;
+    }
+  }
 
-2. Add custom loading spinner
-```typescript
-// Hint: Customize loading state
-<ion-infinite-scroll-content
-  [spinnerIcon]="customSpinner">
-```
-
-3. Add error handling
-```typescript
-// Hint: Handle loading errors
-async loadMore(event) {
-  try {
-    await this.loadData();
-  } catch (e) {
-    this.showError();
-  } finally {
-    event.target.complete();
+  async loadMore(event: any) {
+    try {
+      await this.loadData();
+    } catch (error) {
+      this.error = 'Failed to load more data';
+    } finally {
+      event.target.complete();
+    }
   }
 }
 ```
 
-### Bonus Challenge
-Create an advanced infinite scroll that:
-- Maintains scroll position
-- Prefetches content
-- Shows loading skeletons
-- Handles errors gracefully
+Create file: `src/app/components/infinite-album-list/infinite-album-list.component.html`:
+```html
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let item of items">
+      <ion-label>{{ item.title }}</ion-label>
+    </ion-item>
+  </ion-list>
 
-## 8. Ion-Refresher: Content Updates
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <ion-button (click)="loadInitialData()">Retry</ion-button>
+  </div>
+
+  <ion-infinite-scroll
+    threshold="100px"
+    position="bottom"
+    (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more albums...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+```
+
+Create file: `src/app/components/infinite-album-list/infinite-album-list.component.scss`:
+```scss
+.error-message {
+  text-align: center;
+  padding: 16px;
+  color: var(--ion-color-danger);
+}
+
+ion-infinite-scroll-content {
+  min-height: 80px;
+}
+```
+
+## Ion-Refresher: Content Updates
 
 ### Introduction
 Ion-Refresher provides pull-to-refresh functionality. We'll create a refreshable music library.
 
 ### Demo Implementation
-```typescript
-@Component({
-  template: `
-    <ion-content>
-      <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content
-          pullingIcon="chevron-down"
-          pullingText="Pull to refresh"
-          refreshingSpinner="circles"
-          refreshingText="Refreshing...">
-        </ion-refresher-content>
-      </ion-refresher>
 
-      <ion-list>
-        @for (item of items; track item) {
-          <ion-item>{{ item }}</ion-item>
-        }
-      </ion-list>
-    </ion-content>
-  `,
+Create file: `src/app/components/refreshable-library/refreshable-library.component.ts`:
+```typescript
+import { Component } from '@angular/core';
+import {
+  IonContent, IonRefresher, IonRefresherContent,
+  IonList, IonItem, IonLabel
+} from '@ionic/angular/standalone';
+
+@Component({
+  selector: 'app-refreshable-library',
+  templateUrl: './refreshable-library.component.html',
+  styleUrls: ['./refreshable-library.component.scss'],
+  standalone: true,
   imports: [
-    IonContent,
-    IonRefresher,
-    IonRefresherContent,
-    IonList,
-    IonItem
+    IonContent, IonRefresher, IonRefresherContent,
+    IonList, IonItem, IonLabel
   ]
 })
-```
+export class RefreshableLibraryComponent {
+  items: any[] = [];
+  loading = false;
 
-### Key Features
-- Pull gesture detection
-- Custom pulling states
-- Loading indicators
-- Completion handling
+  constructor() {
+    this.loadInitialData();
+  }
 
-### DIY Exercise: Enhance the Refresher
+  async loadInitialData() {
+    // Simulate initial data load
+    this.items = Array(20).fill(null).map((_, i) => ({
+      id: i,
+      title: `Track ${i + 1}`
+    }));
+  }
 
-1. Add custom pull indicator
-```typescript
-// Hint: Create custom pulling icon
-<ion-refresher-content
-  [pullingIcon]="customIcon">
-```
+  async doRefresh(event: any) {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Update data
+      this.items.unshift({
+        id: this.items.length,
+        title: `New Track ${this.items.length + 1}`
+      });
+      
+      this.showUpdateToast();
+    } catch (error) {
+      this.showErrorAlert();
+    } finally {
+      event.target.complete();
+    }
+  }
 
-2. Add progress indication
-```typescript
-// Hint: Show loading progress
-(ionPull)="updateProgress($event)"
-```
+  private showUpdateToast() {
+    // Implement toast notification
+    console.log('Library updated');
+  }
 
-3. Add completion animation
-```typescript
-// Hint: Add success animation
-<ion-refresher-content
-  [pullingIcon]="customIcon"
-  [refreshingSpinner]="customSpinner"
-  (ionRefreshComplete)="showSuccessAnimation()">
-</ion-refresher-content>
-```
-
-4. Add custom refresh logic
-```typescript
-// Hint: Implement refresh strategy
-async doRefresh(event: any) {
-  try {
-    await this.fetchLatestData();
-    this.showUpdateToast();
-  } catch (error) {
-    this.showErrorAlert();
-  } finally {
-    event.target.complete();
+  private showErrorAlert() {
+    // Implement error alert
+    console.error('Failed to refresh library');
   }
 }
 ```
 
-### Bonus Challenge
-Create an advanced refresh implementation that:
-- Shows what's being updated
-- Includes a progress indicator
-- Animates new content arrival
-- Provides visual feedback on success/failure
+Create file: `src/app/components/refreshable-library/refreshable-library.component.html`:
+```html
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Updating library...">
+    </ion-refresher-content>
+  </ion-refresher>
 
-## 9. Testing Your Components
+  <ion-list>
+    <ion-item *ngFor="let item of items">
+      <ion-label>{{ item.title }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+```
+
+Create file: `src/app/components/refreshable-library/refreshable-library.component.scss`:
+```scss
+ion-refresher {
+  z-index: 1;
+}
+
+ion-list {
+  padding-top: 1px; // Prevent margin collapse
+}
+
+ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  
+  &:last-child {
+    --border-width: 0;
+  }
+}
+```
+
+## Testing Your Components
 
 ### Browser Testing
 1. Run your app:
@@ -644,7 +951,7 @@ Create an advanced refresh implementation that:
    }
    ```
 
-## 10. Final Challenge: Build a Complete Feature
+## Final Challenge: Build a Complete Feature
 
 Combine all the components you've learned about to create a "Featured Albums" section that includes:
 
@@ -662,35 +969,6 @@ Combine all the components you've learned about to create a "Featured Albums" se
 - Include animations
 - Handle errors gracefully
 - Follow Ionic best practices
-
-### Example Structure:
-```typescript
-@Component({
-  template: `
-    <ion-content>
-      <ion-refresher>...</ion-refresher>
-      
-      <ion-accordion-group>
-        <ion-accordion>
-          <ion-item slot="header">
-            <ion-label>Featured Albums</ion-label>
-          </ion-item>
-          
-          <div slot="content">
-            <ion-card>...</ion-card>
-          </div>
-        </ion-accordion>
-      </ion-accordion-group>
-
-      <ion-list>...</ion-list>
-      
-      <ion-infinite-scroll>...</ion-infinite-scroll>
-      
-      <ion-modal>...</ion-modal>
-    </ion-content>
-  `
-})
-```
 
 ## Additional Resources
 
