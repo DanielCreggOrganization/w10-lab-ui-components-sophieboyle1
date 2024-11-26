@@ -955,6 +955,7 @@ Combine all the components you've learned about to create a "Featured Albums" se
 - Include animations
 - Handle errors gracefully
 - Follow Ionic best practices
+- Go to https://ionicframework.com/docs/components and implement two more UI Components of choice
 
 ## Additional Resources
 
