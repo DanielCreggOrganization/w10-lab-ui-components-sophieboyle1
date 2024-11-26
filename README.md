@@ -261,6 +261,7 @@ ion-card {
   padding-top: 8px;
 }
 ```
+Display this card in Tab1
 
 ## Ion-List: Interactive Lists
 
